@@ -68,8 +68,8 @@ class FastSlam(object):
                     plt.xlabel('time')
                     plt.ylabel('Localization Error')
                     plt.legend(
-                        #('Particles = 5', 'Particles = 10', 'Particles = 20', 'Particles = 100', 'Particles = 200'),
-                        ('Without dynamic landmarks', 'With dynamic landmarks'),
+                        ('1 Dynamic Landmark', '2 Dynamic Landmarks', '3 Dynamic Landmarks', '4 Dynamic Landmarks', '5 Dynamic Landmarks', '6 Dynamic Landmarks'),
+                        #('Without dynamic landmarks', 'With dynamic landmarks'),
                         loc='upper right', shadow=True)
                     plt.figure(1)
                     plt.plot(t1, self.lm_error)
@@ -77,7 +77,9 @@ class FastSlam(object):
                     plt.ylabel('Mapping Error')
                     plt.legend(
                         #('Particles = 5', 'Particles = 10', 'Particles = 20', 'Particles = 100', 'Particles = 200'),
-                        ('Without dynamic landmarks', 'With dynamic landmarks'),
+                        ('1 Dynamic Landmark', '2 Dynamic Landmarks', '3 Dynamic Landmarks', '4 Dynamic Landmarks',
+                         '5 Dynamic Landmarks', '6 Dynamic Landmarks'),
+                        #('Without dynamic landmarks', 'With dynamic landmarks'),
                         loc='upper right', shadow=True)
                     break
             if self.world.turn_left(key_pressed):
@@ -127,29 +129,29 @@ if __name__=="__main__":
     loc_err_part = []
     map_err_part = []
     t1 = [5, 10, 20, 100, 200]
-    #dyn = [[True, False, False, False, False, False], [True, True, False, False, False, False], [True, True, True, False, False, False], [True, True, True, True, False, False], [True, True, True, True, True, False], [True, True, True, True, True, True]]
-    dyn = [[False, False, False, False, False, False], [True, True, False, False, False, False]]
+    dyn = [[True, False, False, False, False, False], [True, True, False, False, False, False], [True, True, True, False, False, False], [True, True, True, True, False, False], [True, True, True, True, True, False], [True, True, True, True, True, True]]
+    #dyn = [[False, False, False, False, False, False], [True, True, False, False, False, False]]
     for i in dyn:
         random.seed(5)
         simulator = FastSlam(80, 140, 0, particle_size=200, sensor_radius=75, isdyn=i)
         simulator.run_simulation()
         loc_err_part.append(sum(simulator.lm_error) / len(simulator.lm_error))
         map_err_part.append(sum(simulator.error) / len(simulator.error))
-    # print('Average Localization error for 5, 10, 20, 100, 200 particles: ', loc_err_part)
-    # print('Average Mapping error for 5, 10, 20, 100, 200 particles: ', map_err_part)
-    #
-    # plt.figure(2)
-    # plt.plot(list(range(1, len(dyn)+1)), map_err_part, '-o')
-    # # plt.plot(t1, map_err_part, '-o')
-    # # plt.xticks(t1, [t for t in t1])
-    # plt.title('Average Mapping Error vs Number of Particles')
-    # plt.plot(list(range(1, len(dyn)+1)), loc_err_part, '-o')
-    # # plt.plot(t1, loc_err_part, '-o')
-    # # plt.xticks(t1, [t for t in t1])
-    # plt.xlabel('Number of dynamic landmarks')
-    # plt.ylabel('Average Error')
-    # plt.title('Average Error vs Number of dynamic landmarks')
-    # plt.legend(
-    #     ('Average Mapping Error', 'Average Localization Error',),
-    #     loc='upper right', shadow=True)
+    print('Average Localization error for 5, 10, 20, 100, 200 particles: ', loc_err_part)
+    print('Average Mapping error for 5, 10, 20, 100, 200 particles: ', map_err_part)
+
+    plt.figure(2)
+    plt.plot(list(range(1, len(dyn)+1)), map_err_part, '-o')
+    # plt.plot(t1, map_err_part, '-o')
+    # plt.xticks(t1, [t for t in t1])
+    plt.title('Average Mapping Error vs Number of dynamic landmarks')
+    plt.plot(list(range(1, len(dyn)+1)), loc_err_part, '-o')
+    # plt.plot(t1, loc_err_part, '-o')
+    # plt.xticks(t1, [t for t in t1])
+    plt.xlabel('Number of dynamic landmarks')
+    plt.ylabel('Average Error')
+    plt.title('Average Error vs Number of dynamic landmarks')
+    plt.legend(
+        ('Average Mapping Error', 'Average Localization Error',),
+        loc='upper right', shadow=True)
     plt.show()
